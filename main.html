@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Piano</title>
+        <meta name="description" content="A synth piano synth that generates all of its audio files dynamically using JavaScript and data URIs. Choose from a variety of sounds styles and play with the looper, visual waveforms, and more." />
+        <link rel="stylesheet" type="text/css" href="piano.css" />
+        <meta property="og:image" content="http://mrcoles.com/media/img/piano-visual-mode.png">
+        <link rel="image_src" href="http://mrcoles.com/media/img/piano-visual-mode.png" />
+
+
+        <script src="angular\bower_components\bootstrap\dist\css\bootstrap.min.js"></script>  
+        <script src="angular\bower_components\bootstrap\dist\js\bootstrap.min.js"></script>
+        <script src="jquery-1.7.1.min.js"></script>
+        <script src="func.js"></script> 
+
+
+        <style type="text/css">
+        /* Some custom styles to beautify this example */
+        .demo-content{
+            padding: 15px;
+            background: #dbdfe5;
+        }
+        .demo-content.first{
+            background: #303030;
+            height: 40px;
+        }
+
+        .demo-content.second{
+            background: #404040;
+            height: 400px;
+        }
+
+        .demo-content.third{
+            height: 135px;
+            background-image: url("music.jpg");
+        }
+
+        .demo-content.fourth{
+            background: black;
+            height: 180px;
+        }
+
+        p.stil{
+            font-family: Monotype Corsiva; 
+            font-size: 50px;
+            text-align: center;
+            color: white;
+        }
+
+        h1{
+            font-family: Times; 
+            font-size: 20px;
+            color: white;
+        }
+
+        img{
+        margin-left: 170px;
+        margin-right: 100px;
+        width: 150px;
+        height: 150px;
+
+        }
+
+        img.one {
+            border-radius: 50px 50px 50px;
+            margin-bottom: 10px;
+        }
+        img.two {
+            border-radius: 50px 50px 50px;
+            margin-bottom: 10px;
+        }
+        img.three {
+            border-radius: 50px 50px 50px;
+            margin-bottom: 10px;
+        }
+       
+</style>
+
+
+<style type="text/css">
+    
+        table
+        {
+            border-style:solid;
+            border-color:black;
+            border-collapse: collapse;
+            border-spacing:0px;
+            
+            background: -webkit-linear-gradient(#66FFFF, #CC0066); /* pentru safari si chrome*/
+            background: linear-gradient(blue, black); /* sintaxa standard trebuie sa fie ultima */
+        }
+
+        @-webkit-keyframes spinner {
+          from {
+            -webkit-transform: rotateY(0deg);
+          }
+          to {
+            -webkit-transform: rotateY(360deg);
+          }
+        }
+
+        #stage {
+          margin: 1em auto;
+          -webkit-perspective: 1200px;
+        }
+
+        #spinner {
+          -webkit-animation-name: spinner;
+          -webkit-animation-timing-function: linear;
+          -webkit-animation-iteration-count: infinite;
+          -webkit-animation-duration: 6s;
+          -webkit-transform-style: preserve-3d;
+        }
+        #spinner:hover {
+          -webkit-animation-play-state: paused;
+        }
+
+        #spinner img {
+          position: absolute;
+          border: 1px solid #ccc;
+          background: rgba(255,255,255,0.8);
+          box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+</style>
+
+<script type="text/javascript">
+function theRotator() {
+    $('div.rotator ul li').css({opacity: 0.0});
+    $('div.rotator ul li:first').css({opacity: 1.0});
+    //2500 = schimba urmatoarea imagine, dupa 2.5 secunde
+    setInterval('rotate()',2500);
+}
+function rotate() {
+    var current = ($('div.rotator ul li.show')?  $('div.rotator ul li.show') : $('div.rotator ul li:first'));
+    if ( current.length == 0 ) current = $('div.rotator ul li:first');
+    var next = ((current.next().length) ? ((current.next().hasClass('show')) ? $('div.rotator ul li:first') :current.next()) : $('div.rotator ul li:first'));
+    next.css({opacity: 0.0})
+    .addClass('show')
+    .animate({opacity: 1.0}, 1000);
+    //ascunde imaginea curenta
+    current.animate({opacity: 0.0}, 1000)
+    .removeClass('show');
+};
+$(document).ready(function() {
+    theRotator();
+    $('div.rotator').fadeIn(1000);
+    $('div.rotator ul li').fadeIn(1000); // IE
+});
+</script>
+
+
+
+    </head>
+   
+    <body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-1">
+                <div class="demo-content first">  
+                    <p class="stil"> PianoFun </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-11">
+            <div class="demo-content second">
+                    <!-- Pianul -->
+                    <div id="content-inner">
+                        <div id="piano">
+                            <h1>Play</h1>               
+                        </div>
+                    </div>
+            </div>
+        </div>
+        
+        
+        <!--Row with two columns divided in 1:3 ratio-->
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="demo-content third"> 
+
+                    <img src="15.jpg" class="one" alt="Circular Image">  
+                    <img src="16.jpg" class="two" alt="Circular Image"> 
+                    <img src="17.jpg" class="three" alt="Circular Image"> 
+
+
+                </div>
+            </div>
+            <div class="col-sm-9">
+
+                <div class="demo-content fourth"> 
+
+                    <table align="center" > 
+    
+                    <tr>
+                    <td height="200" width="800" >
+
+                    <div id="stage" style="padding-left: 215px; height: 160px;">
+                        <div id="spinner" style="-webkit-transform-origin: 180px 0 0;">
+                            <img style="-webkit-transform: rotateY(0deg) translateX(180px); padding: 0 0 0 160px;" src="11.jpg" width="200" height="160" >
+                            <img style="-webkit-transform: rotateY(72deg) translateX(180px); padding: 0 0 0 147px;" src="12.jpg" width="213" height="160" >
+                            <img style="-webkit-transform: rotateY(144deg) translateX(180px); padding: 0 0 0 120px;" src="13.jpg" width="240" height="160" >
+                            <img style="-webkit-transform: rotateY(216deg) translateX(180px); padding: 0 0 0 147px;" src="1.jpg" width="213" height="160" >
+                            <img style="-webkit-transform: rotateY(288deg) translateX(180px); padding: 0 0 0 122px;" src="2.jpg" width="238" height="160" >
+                        </div>
+                    </div>
+                    
+                    </td>
+                    </tr>
+
+                </table>
+                   
+                </div>
+         
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="audio.js"></script>
+    <script src="piano.js"></script>
+
+
+    </body>
+</html>
+
+
+
